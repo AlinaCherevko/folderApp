@@ -15,6 +15,20 @@ const addRecursiveFolders = (f, comingF) => {
   }
 };
 
+const deleteRecursiveFolder = (f, comingId) => {
+  if (f.id === comingId) {
+    return;
+  } else {
+    f.child.map((childEl, index) => {
+      deleteRecursiveFolder(childEl, comingId);
+
+      if (f.child[index] && f.child[index].id === comingId) {
+        f.child.splice(index, 1);
+      }
+    });
+  }
+};
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const folderSlice = createSlice({
@@ -25,14 +39,18 @@ const folderSlice = createSlice({
 
   reducers: {
     //--------add----------//
-
     addFolder(state, action) {
       addRecursiveFolders(state.folders, action.payload);
     },
-
     //--------delete----------//
-
-    //---------edit---------//
+    deleteFolder(state, action) {
+      console.log(action.payload);
+      deleteRecursiveFolder(state.folders, action.payload);
+    },
+    //---------rename---------//
+    renameFolder() {},
+    //------resend----------//
+    resendFolder() {},
   },
 });
 

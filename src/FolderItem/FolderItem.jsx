@@ -5,12 +5,20 @@ import style from "./FolderItem.module.css";
 import { Button, Input } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
-import { addFolder } from "../store/folderSlice";
+import { addFolder, deleteFolder } from "../store/folderSlice";
 
-function FolderItem({ id, name, type, child, userRole }) {
+function FolderItem({
+  id,
+  name,
+  type,
+  child,
+  userRole,
+  setIsOpenFolder,
+  isOpenFolder,
+}) {
   const [fileType, setFileType] = useState("");
   const [value, setValue] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  //const [isOpen, setIsOpen] = useState(true);
   //const [isEmpty, setIsEmpty] = useState(true);
   const [isShownInfoPanel, setIsShownInfoPanel] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -38,7 +46,9 @@ function FolderItem({ id, name, type, child, userRole }) {
     setFileType("file");
   };
 
-  const onDeleteFolder = () => {};
+  const onDeleteFolder = () => {
+    dispatch(deleteFolder(id));
+  };
 
   const onInputChange = (e) => {
     setValue(e.target.value);
@@ -66,7 +76,7 @@ function FolderItem({ id, name, type, child, userRole }) {
   };
 
   const onOpenFolderClick = () => {
-    setIsOpen(!isOpen);
+    setIsOpenFolder(!isOpenFolder);
   };
 
   return (
@@ -77,7 +87,7 @@ function FolderItem({ id, name, type, child, userRole }) {
             {child?.length > 0 ? (
               <button onClick={onOpenFolderClick}>
                 <Icon
-                  id={isOpen ? "icon-plus" : "icon-minus"}
+                  id={isOpenFolder ? "icon-minus" : "icon-plus"}
                   width="20px"
                   height="20px"
                   fill="black"
@@ -85,7 +95,7 @@ function FolderItem({ id, name, type, child, userRole }) {
                 />
               </button>
             ) : (
-              " "
+              <button></button>
             )}
             <Icon
               id={type === "folder" ? "icon-folder" : "icon-file-empty"}
@@ -161,6 +171,8 @@ FolderItem.propTypes = {
   id: PropTypes.string,
   child: PropTypes.array,
   userRole: PropTypes.string,
+  setIsOpenFolder: PropTypes.func,
+  isOpenFolder: PropTypes.bool,
 };
 
 export default FolderItem;

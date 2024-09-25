@@ -3,9 +3,11 @@ import FolderItem from "../FolderItem/FolderItem";
 import { foldersSelector } from "../store/selectors";
 import PropTypes from "prop-types";
 import style from "./FolderList.module.css";
+import { useState } from "react";
 
 function FolderList({ userRole }) {
   const { folders } = useSelector(foldersSelector);
+  const [isOpenFolder, setIsOpenFolder] = useState(false);
 
   const renderFolderList = (item) => (
     <div key={item.id}>
@@ -15,8 +17,11 @@ function FolderList({ userRole }) {
         type={item.type}
         child={item.child}
         userRole={userRole}
+        setIsOpenFolder={setIsOpenFolder}
+        isOpenFolder={isOpenFolder}
       />
-      {item.child?.length > 0 && (
+
+      {isOpenFolder && item.child?.length > 0 && (
         <div className={style.itemWrapper}>
           {item.child.map((childItem) => renderFolderList(childItem))}
         </div>
