@@ -18,8 +18,8 @@ function FolderItem({
 }) {
   const [fileType, setFileType] = useState("");
   const [value, setValue] = useState("");
+  const [newName, setNewName] = useState("");
   //const [isOpen, setIsOpen] = useState(true);
-  //const [isEmpty, setIsEmpty] = useState(true);
   const [isShownInfoPanel, setIsShownInfoPanel] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
 

@@ -29,6 +29,14 @@ const deleteRecursiveFolder = (f, comingId) => {
   }
 };
 
+const renameRecursiveFolder = (f, comingId, newName) => {
+  if (f.id === comingId) {
+    f.name = newName;
+  } else {
+    f.child.map((childEl) => renameRecursiveFolder(childEl, comingId, newName));
+  }
+};
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const folderSlice = createSlice({
@@ -48,7 +56,13 @@ const folderSlice = createSlice({
       deleteRecursiveFolder(state.folders, action.payload);
     },
     //---------rename---------//
-    renameFolder() {},
+    renameFolder(state, action) {
+      renameRecursiveFolder(
+        state.folders,
+        action.payload.id,
+        action.payload.name
+      );
+    },
     //------resend----------//
     resendFolder() {},
   },
