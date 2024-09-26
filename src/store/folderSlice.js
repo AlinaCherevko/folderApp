@@ -37,6 +37,30 @@ const renameRecursiveFolder = (f, comingId, newName) => {
   }
 };
 
+const resendRecursiveFolder = (f, comingId, newParentName) => {
+  let folderToMove;
+
+  f.child = f.child.filter((childEl) => {
+    if (childEl.id === comingId) {
+      folderToMove = childEl;
+      return false;
+    }
+    return true;
+  });
+
+  if (folderToMove) {
+    const addFolderToNewParent = (parent) => {
+      if (parent.name === newParentName) {
+        parent.child.push(folderToMove);
+        return true;
+      }
+      return parent.child.some(addFolderToNewParent);
+    };
+
+    addFolderToNewParent(f);
+  }
+};
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const folderSlice = createSlice({
@@ -66,7 +90,14 @@ const folderSlice = createSlice({
       console.log(action.payload);
     },
     //------resend----------//
-    resendFolder() {},
+    resendFolder(state, action) {
+      resendRecursiveFolder(
+        state.folders,
+        action.payload.id,
+        action.payload.value
+      );
+      console.log(action.payload);
+    },
   },
 });
 
@@ -74,4 +105,5 @@ const folderSlice = createSlice({
 export const folderReducer = folderSlice.reducer;
 
 //Екшени слайсу
-export const { addFolder, deleteFolder, renameFolder } = folderSlice.actions;
+export const { addFolder, deleteFolder, renameFolder, resendFolder } =
+  folderSlice.actions;

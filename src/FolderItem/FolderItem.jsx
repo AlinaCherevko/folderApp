@@ -3,7 +3,12 @@ import Icon from "../Icon/Icon";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
-import { addFolder, deleteFolder, renameFolder } from "../store/folderSlice";
+import {
+  addFolder,
+  deleteFolder,
+  renameFolder,
+  resendFolder,
+} from "../store/folderSlice";
 import Form from "../Form/Form";
 import style from "./FolderItem.module.css";
 
@@ -21,8 +26,6 @@ function FolderItem({
   const [newContent, setNewContent] = useState("");
   const [isShownInfoPanel, setIsShownInfoPanel] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
-
-  console.log(newContent);
 
   const dispatch = useDispatch();
 
@@ -51,6 +54,11 @@ function FolderItem({
     dispatch(deleteFolder(id));
   };
 
+  const onResendFolder = () => {
+    setIsOpenInput(true);
+    setNewContent("newFolder");
+  };
+
   const addNewContent = () => {
     if (newContent === "file" && value.trim() !== "") {
       const formData = {
@@ -64,10 +72,10 @@ function FolderItem({
 
       dispatch(addFolder(formData));
     } else if (newContent === "newName" && value.trim() !== "") {
-      console.log("set name content");
       dispatch(renameFolder({ id, value }));
+    } else if (newContent === "newFolder" && value.trim() !== "") {
+      dispatch(resendFolder({ id, value }));
     }
-
     setValue("");
     setIsOpenInput(false);
     setFileType("");
@@ -133,7 +141,7 @@ function FolderItem({
                     </button>
                   </li>
                   <li>
-                    <button>
+                    <button onClick={onResendFolder}>
                       <Icon
                         id="icon-send-to"
                         fill={name === "main" ? "blue" : ""}
@@ -166,25 +174,3 @@ FolderItem.propTypes = {
 };
 
 export default FolderItem;
-
-// const onFormSubmit = (e) => {
-//   e.preventDefault();
-
-//   const formData = {
-//     id: nanoid(),
-//     parentId: id,
-//     name: value,
-//     type: fileType,
-//     owner: userRole,
-//     child: fileType === "folder" ? [] : null,
-//   };
-
-//   if (value.trim() === "") return;
-
-//   console.log(formData);
-//   dispatch(addFolder(formData));
-//   setValue("");
-//   setIsOpenInput(false);
-//   setFileType("");
-//   setNewContent("");
-// };
