@@ -60,8 +60,10 @@ const folderSlice = createSlice({
       renameRecursiveFolder(
         state.folders,
         action.payload.id,
-        action.payload.name
+        action.payload.value
       );
+
+      console.log(action.payload);
     },
     //------resend----------//
     resendFolder() {},
@@ -72,17 +74,4 @@ const folderSlice = createSlice({
 export const folderReducer = folderSlice.reducer;
 
 //Екшени слайсу
-export const { addFolder, deleteFolder, editFolder } = folderSlice.actions;
-
-// addFolder(state, action) {
-//   if (state.folders.id === action.payload.parentId) {
-//     state.folders.child = [...state.folders.child, action.payload];
-//   } else {
-//     state.folders.child.map((item) =>
-//       item.id === action.payload.parentId
-//         ? item.child.push(action.payload)
-//         : item
-//     );
-//   }
-//   console.log(action.payload);
-// },
+export const { addFolder, deleteFolder, renameFolder } = folderSlice.actions;

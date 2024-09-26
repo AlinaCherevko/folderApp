@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Icon from "../Icon/Icon";
 import PropTypes from "prop-types";
-import style from "./FolderItem.module.css";
-import { Button, Input } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
-import { addFolder, deleteFolder } from "../store/folderSlice";
+import { addFolder, deleteFolder, renameFolder } from "../store/folderSlice";
+import Form from "../Form/Form";
+import style from "./FolderItem.module.css";
 
 function FolderItem({
   id,
@@ -18,13 +18,11 @@ function FolderItem({
 }) {
   const [fileType, setFileType] = useState("");
   const [value, setValue] = useState("");
-  const [newName, setNewName] = useState("");
-  //const [isOpen, setIsOpen] = useState(true);
+  const [newContent, setNewContent] = useState("");
   const [isShownInfoPanel, setIsShownInfoPanel] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
 
-  //console.log(userRole);
-  // console.log(isOpen);
+  console.log(newContent);
 
   const dispatch = useDispatch();
 
@@ -34,45 +32,46 @@ function FolderItem({
 
   const onEditName = () => {
     setIsOpenInput(true);
+    setNewContent("newName");
   };
 
   const onAddFolder = () => {
     setIsOpenInput(true);
     setFileType("folder");
+    setNewContent("file");
   };
 
   const onAddFile = () => {
     setIsOpenInput(true);
     setFileType("file");
+    setNewContent("file");
   };
 
   const onDeleteFolder = () => {
     dispatch(deleteFolder(id));
   };
 
-  const onInputChange = (e) => {
-    setValue(e.target.value);
-  };
+  const addNewContent = () => {
+    if (newContent === "file" && value.trim() !== "") {
+      const formData = {
+        id: nanoid(),
+        parentId: id,
+        name: value,
+        type: fileType,
+        owner: userRole,
+        child: fileType === "folder" ? [] : null,
+      };
 
-  const onFormSubmit = (e) => {
-    e.preventDefault();
+      dispatch(addFolder(formData));
+    } else if (newContent === "newName" && value.trim() !== "") {
+      console.log("set name content");
+      dispatch(renameFolder({ id, value }));
+    }
 
-    const formData = {
-      id: nanoid(),
-      parentId: id,
-      name: value,
-      type: fileType,
-      owner: userRole,
-      child: fileType === "folder" ? [] : null,
-    };
-
-    if (value.trim() === "") return;
-
-    console.log(formData);
-    dispatch(addFolder(formData));
     setValue("");
     setIsOpenInput(false);
     setFileType("");
+    setNewContent("");
   };
 
   const onOpenFolderClick = () => {
@@ -145,16 +144,11 @@ function FolderItem({
                   </li>
                 </ul>
                 {isOpenInput && (
-                  <form className={style.form} onSubmit={onFormSubmit}>
-                    <Input
-                      placeholder="Type new name.."
-                      size="xs"
-                      onChange={onInputChange}
-                    />
-                    <Button type="submit" size="xs">
-                      Add
-                    </Button>
-                  </form>
+                  <Form
+                    setValue={setValue}
+                    addNewContent={addNewContent}
+                    value={value}
+                  />
                 )}
               </>
             )}
@@ -176,3 +170,25 @@ FolderItem.propTypes = {
 };
 
 export default FolderItem;
+
+// const onFormSubmit = (e) => {
+//   e.preventDefault();
+
+//   const formData = {
+//     id: nanoid(),
+//     parentId: id,
+//     name: value,
+//     type: fileType,
+//     owner: userRole,
+//     child: fileType === "folder" ? [] : null,
+//   };
+
+//   if (value.trim() === "") return;
+
+//   console.log(formData);
+//   dispatch(addFolder(formData));
+//   setValue("");
+//   setIsOpenInput(false);
+//   setFileType("");
+//   setNewContent("");
+// };
