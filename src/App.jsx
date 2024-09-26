@@ -6,8 +6,9 @@ import RadioBtnsSection from "./RadioBtnsSection/RadioBtnsSection";
 
 function App() {
   const [userRole, setUserRole] = useState("User");
+  const [query, setQuery] = useState("");
 
-  console.log(userRole);
+  console.log(query);
 
   const setRole = (role) => {
     setUserRole(role);
@@ -17,8 +18,8 @@ function App() {
     <div className="container">
       <h1>Folder App</h1>
       <RadioBtnsSection setRole={setRole} userRole={userRole} />
-      <InputSearch />
-      <FolderList userRole={userRole} />
+      <InputSearch setQuery={setQuery} />
+      <FolderList userRole={userRole} query={query} />
     </div>
   );
 }

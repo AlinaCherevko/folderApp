@@ -38,7 +38,8 @@ const renameRecursiveFolder = (f, comingId, newName) => {
 };
 
 const resendRecursiveFolder = (f, comingId, newParentName) => {
-  let folderToMove;
+  let folderToMove = null;
+  let folderFound = false;
 
   f.child = f.child.filter((childEl) => {
     if (childEl.id === comingId) {
@@ -52,12 +53,19 @@ const resendRecursiveFolder = (f, comingId, newParentName) => {
     const addFolderToNewParent = (parent) => {
       if (parent.name === newParentName) {
         parent.child.push(folderToMove);
+        folderFound = true;
         return true;
       }
+
       return parent.child.some(addFolderToNewParent);
     };
-
     addFolderToNewParent(f);
+
+    if (!folderFound) {
+      console.error(`Папку з ім'ям ${newParentName} не знайдено`);
+    }
+  } else {
+    console.error(`Папку з id ${comingId} не знайдено для переміщення`);
   }
 };
 

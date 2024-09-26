@@ -1,8 +1,13 @@
 import { Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-function InputSearch() {
+function InputSearch({ setQuery }) {
   const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    setQuery(searchValue);
+  }, [searchValue]);
 
   const onSearchInput = (event) => {
     setSearchValue(event.target.value);
@@ -15,5 +20,8 @@ function InputSearch() {
     </div>
   );
 }
+InputSearch.propTypes = {
+  setQuery: PropTypes.func,
+};
 
 export default InputSearch;

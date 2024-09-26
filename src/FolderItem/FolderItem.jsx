@@ -75,6 +75,7 @@ function FolderItem({
       dispatch(renameFolder({ id, value }));
     } else if (newContent === "newFolder" && value.trim() !== "") {
       dispatch(resendFolder({ id, value }));
+      console.log("я спрацював");
     }
     setValue("");
     setIsOpenInput(false);

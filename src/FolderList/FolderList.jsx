@@ -2,12 +2,22 @@ import { useSelector } from "react-redux";
 import FolderItem from "../FolderItem/FolderItem";
 import { foldersSelector } from "../store/selectors";
 import PropTypes from "prop-types";
-import style from "./FolderList.module.css";
 import { useState } from "react";
+import style from "./FolderList.module.css";
 
-function FolderList({ userRole }) {
+function FolderList({ userRole, query }) {
   const { folders } = useSelector(foldersSelector);
-  const [isOpenFolder, setIsOpenFolder] = useState(false);
+  const [isOpenFolder, setIsOpenFolder] = useState({});
+
+  const filterFolders = (folder) => {
+    if (folder.name.toLowerCase().includes(query.toLowerCase())) {
+      return true;
+    }
+    if (folder.child?.some(filterFolders)) {
+      return true;
+    }
+    return false;
+  };
 
   const renderFolderList = (item) => (
     <div key={item.id}>
@@ -17,13 +27,17 @@ function FolderList({ userRole }) {
         type={item.type}
         child={item.child}
         userRole={userRole}
-        setIsOpenFolder={setIsOpenFolder}
-        isOpenFolder={isOpenFolder}
+        setIsOpenFolder={() =>
+          setIsOpenFolder((prev) => ({ ...prev, [item.id]: !prev[item.id] }))
+        }
+        isOpenFolder={isOpenFolder[item.id]}
       />
 
-      {isOpenFolder && item.child?.length > 0 && (
+      {isOpenFolder[item.id] && item.child?.length > 0 && (
         <div className={style.itemWrapper}>
-          {item.child.map((childItem) => renderFolderList(childItem))}
+          {item.child
+            .filter(filterFolders)
+            .map((childItem) => renderFolderList(childItem))}
         </div>
       )}
     </div>
@@ -33,8 +47,8 @@ function FolderList({ userRole }) {
 }
 
 FolderList.propTypes = {
-  setRole: PropTypes.func,
   userRole: PropTypes.string,
+  query: PropTypes.string,
 };
 
 export default FolderList;
