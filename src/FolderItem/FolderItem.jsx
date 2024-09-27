@@ -179,7 +179,11 @@ function FolderItem({
                   </li>
                 </ul>
                 {isOpenInput && (
-                  <Form setValue={setValue} addNewContent={addNewContent} />
+                  <Form
+                    setValue={setValue}
+                    addNewContent={addNewContent}
+                    setIsShownInfoPanel={setIsShownInfoPanel}
+                  />
                 )}
               </>
             )}

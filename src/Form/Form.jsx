@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import style from "./Form.module.css";
 
-function Form({ setValue, addNewContent }) {
+function Form({ setValue, addNewContent, setIsShownInfoPanel }) {
   const [inputValue, setInputValue] = useState("");
 
   const onInputChange = (e) => {
@@ -20,6 +20,7 @@ function Form({ setValue, addNewContent }) {
 
     addNewContent();
     setInputValue("");
+    setIsShownInfoPanel(false);
   };
 
   return (
@@ -35,6 +36,7 @@ function Form({ setValue, addNewContent }) {
 Form.propTypes = {
   setValue: PropTypes.func,
   addNewContent: PropTypes.func,
+  setIsShownInfoPanel: PropTypes.func,
 };
 
 export default Form;
