@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "../Icon/Icon";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
@@ -27,6 +27,12 @@ function FolderItem({
   const [newContent, setNewContent] = useState("");
   const [isShownInfoPanel, setIsShownInfoPanel] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
+
+  useEffect(() => {
+    if (userRole === "User") {
+      setIsShownInfoPanel(false);
+    }
+  }, [userRole]);
 
   const dispatch = useDispatch();
 
