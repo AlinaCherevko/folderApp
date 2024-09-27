@@ -27,6 +27,7 @@ function FolderList({ userRole, query }) {
         type={item.type}
         child={item.child}
         userRole={userRole}
+        owner={item.owner}
         setIsOpenFolder={() =>
           setIsOpenFolder((prev) => ({ ...prev, [item.id]: !prev[item.id] }))
         }

@@ -17,6 +17,7 @@ function FolderItem({
   name,
   type,
   child,
+  owner,
   userRole,
   setIsOpenFolder,
   isOpenFolder,
@@ -30,6 +31,8 @@ function FolderItem({
   const dispatch = useDispatch();
 
   const showInfoPanel = () => {
+    if (userRole === "User" && owner === "Admin") return;
+
     setIsShownInfoPanel(!isShownInfoPanel);
   };
 
@@ -93,6 +96,29 @@ function FolderItem({
         <div>
           <div className={style.folderWrapper}>
             {child?.length > 0 ? (
+              userRole === "User" && owner === "Admin" ? (
+                <Icon
+                  id="icon-lock"
+                  width="20px"
+                  height="20px"
+                  fill="black"
+                  stroke="black"
+                />
+              ) : (
+                <button onClick={onOpenFolderClick}>
+                  <Icon
+                    id={isOpenFolder ? "icon-minus" : "icon-plus"}
+                    width="20px"
+                    height="20px"
+                    fill="black"
+                    stroke="black"
+                  />
+                </button>
+              )
+            ) : (
+              <button></button>
+            )}
+            {/* {child?.length > 0 ? (
               <button onClick={onOpenFolderClick}>
                 <Icon
                   id={isOpenFolder ? "icon-minus" : "icon-plus"}
@@ -104,7 +130,7 @@ function FolderItem({
               </button>
             ) : (
               <button></button>
-            )}
+            )} */}
             <Icon
               id={type === "folder" ? "icon-folder" : "icon-file-empty"}
               width="20px"
@@ -172,6 +198,7 @@ FolderItem.propTypes = {
   userRole: PropTypes.string,
   setIsOpenFolder: PropTypes.func,
   isOpenFolder: PropTypes.bool,
+  owner: PropTypes.string,
 };
 
 export default FolderItem;
